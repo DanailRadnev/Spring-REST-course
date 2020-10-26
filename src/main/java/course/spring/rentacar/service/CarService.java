@@ -10,8 +10,10 @@ public interface CarService {
     Car updateCar(Car car);
     Car addCar(Car car);
     Car deleteCar(Long id);
+    Car setCarForWash(Car car);
+    Car setCarForRepair(Car car);
     Car washCar(Car car);
     Car repairCar(Car car);
     Car rentACar(Car car);
-    Car returnAndRateCar(Car car, int rate);
+    Car returnAndRateCar(Car car, Integer rate);
 }

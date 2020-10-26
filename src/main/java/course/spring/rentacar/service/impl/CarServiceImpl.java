@@ -43,7 +43,9 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car addCar(Car car) {
         car.setId(null);
-        car.setAvailable(false);
+        car.setAvailable(true);
+        car.setBroke(false);
+        car.setDirty(false);
         return carRepository.save(car);
     }
 
@@ -52,6 +54,18 @@ public class CarServiceImpl implements CarService {
         Car result = this.getCarById(id);
         carRepository.delete(result);
         return result;
+    }
+
+    @Override
+    public Car setCarForWash(Car car) {
+        car.setDirty(true);
+        return carRepository.save(car);
+    }
+
+    @Override
+    public Car setCarForRepair(Car car) {
+        car.setBroke(true);
+        return carRepository.save(car);
     }
 
     @Override
@@ -71,14 +85,16 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car rentACar(Car car) {
         Car result = this.getCarById(car.getId());
+        //TODO set vehicle to User or User to vehicle (depends on the implementation)
         result.setAvailable(false);
-        return carRepository.save(car);
+        return carRepository.save(result);
     }
 
     @Override
-    public Car returnAndRateCar(Car car, int rate) {
+    public Car returnAndRateCar(Car car, Integer rate) {
         Car result = this.getCarById(car.getId());
-        result.setAvailable(false);
-        return null;
+        //TODO implement rating
+        result.setAvailable(true);
+        return result;
     }
 }
