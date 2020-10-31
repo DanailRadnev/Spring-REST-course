@@ -19,7 +19,7 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"cars", "ratings"})
+@JsonIgnoreProperties({"cars"})
 public class User {
     @Id
     @GeneratedValue(generator = "user_sequence", strategy = GenerationType.SEQUENCE)
