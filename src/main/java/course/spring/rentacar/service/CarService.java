@@ -14,6 +14,6 @@ public interface CarService {
     Car setCarForRepair(Car car);
     Car washCar(Car car);
     Car repairCar(Car car);
-    Car rentACar(Car car);
-    Car returnAndRateCar(Car car, Integer rate);
+    Car rentACar(Car car, Long userId);
+    Car returnAndRateCar(Car car, Long userId, Long rate);
 }

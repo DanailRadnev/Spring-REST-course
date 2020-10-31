@@ -87,28 +87,28 @@ public class CarResource {
         return carService.repairCar(car);
     }
 
-    @PutMapping("rent/{id}")
-    public Car rentACar(@PathVariable Long id, @RequestBody Car car) {
+    @PutMapping("rent/user/{userId}/car/{carId}")
+    public Car rentACar(@PathVariable Long userId, @PathVariable Long carId, @RequestBody Car car) {
         //TODO check for validation errors
 
-        checkIfCarMatchId(id, car);
-        return carService.rentACar(car);
+        checkIfCarMatchId(carId, car);
+        return carService.rentACar(car, userId);
     }
 
-    @PutMapping("return/{id}/rate/{rate}")
-    public Car returnAndRateCar(@PathVariable Long id, @PositiveOrZero @PathVariable Integer rate, @RequestBody Car car) {
+    @PutMapping("return/{id}/user/{userId}/rate/{rate}")
+    public Car returnAndRateCar(@PathVariable Long id, @PositiveOrZero @PathVariable Long rate, @PathVariable Long userId, @RequestBody Car car) {
         //TODO check for validation errors
 
         checkIfCarMatchId(id, car);
-        return carService.returnAndRateCar(car, rate);
+        return carService.returnAndRateCar(car, userId, rate);
     }
 
-    @PutMapping("return/{id}")
-    public Car returnCar(@PathVariable Long id, @RequestBody Car car) {
+    @PutMapping("return/{id}/user/{userId}")
+    public Car returnCar(@PathVariable Long id, @PathVariable Long userId, @RequestBody Car car) {
         //TODO check for validation errors
 
         checkIfCarMatchId(id, car);
-        return carService.returnAndRateCar(car, null);
+        return carService.returnAndRateCar(car, userId, null);
     }
 
     @DeleteMapping("{id}")

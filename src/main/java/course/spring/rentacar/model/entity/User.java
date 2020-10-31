@@ -1,5 +1,6 @@
 package course.spring.rentacar.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 import lombok.*;
@@ -8,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
@@ -19,6 +19,7 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"cars", "ratings"})
 public class User {
     @Id
     @GeneratedValue(generator = "user_sequence", strategy = GenerationType.SEQUENCE)
@@ -42,11 +43,13 @@ public class User {
     @NonNull
     @NotNull
     @Email
+    @Column(nullable = false)
     private String email;
 
     @NonNull
     @NotNull
     @Size(min=3, max = 30)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @JsonProperty(access = WRITE_ONLY)
@@ -55,7 +58,12 @@ public class User {
     @Size(min=5)
     private String password;
 
-    private boolean active = true;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Car> cars;
 
+    @OneToMany(mappedBy = "user")
+    private List<Rating> ratings;
+
+    private boolean active = true;
 
 }

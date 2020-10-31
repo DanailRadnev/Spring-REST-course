@@ -1,5 +1,6 @@
 package course.spring.rentacar.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,14 +13,11 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"ratings"})
 public class Car {
+
     @Id
     @GeneratedValue(generator = "car_sequence", strategy = GenerationType.SEQUENCE)
-//    @SequenceGenerator(
-//            name = "post_sequence",
-//            sequenceName = "post_sequence",
-//            allocationSize = 3
-//    )
     private Long id;
 
     @NonNull
@@ -41,6 +39,12 @@ public class Car {
     @NotNull
     @Size(min = 3, max = 32)
     private String colour;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User user;
+
+    @Transient
+    private Double rating;
 
     private boolean available = true;
 

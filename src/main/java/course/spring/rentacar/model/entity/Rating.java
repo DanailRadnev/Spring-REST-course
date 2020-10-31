@@ -6,7 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "RATINGS")
+@Table(name = "RATINGS", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "carId"})})
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -24,4 +24,7 @@ public class Rating {
     @NonNull
     @NotNull
     private Long rating;
+
+    @ManyToOne
+    private User user;
 }
