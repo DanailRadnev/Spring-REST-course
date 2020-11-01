@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"ratings"})
+@JsonIgnoreProperties({"ratings", "user"})
 public class Car {
 
     @Id
@@ -40,7 +40,7 @@ public class Car {
     @Size(min = 3, max = 32)
     private String colour;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @Transient

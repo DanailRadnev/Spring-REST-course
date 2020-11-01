@@ -2,6 +2,7 @@ package course.spring.rentacar.service.impl;
 
 import course.spring.rentacar.dao.UserRepository;
 import course.spring.rentacar.exception.NonexistingEntityException;
+import course.spring.rentacar.exception.util.ExceptionHandlingUtils;
 import course.spring.rentacar.model.entity.User;
 import course.spring.rentacar.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +42,26 @@ public class UserServiceImpl implements UserService {
         user.setId(null);
 //        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 //        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        User result = null;
+        try {
+            result = userRepository.save(user);
+        }catch (RuntimeException ex){
+            ExceptionHandlingUtils.handleDataIntegrityViolationException(ex);
+        }
+        return result;
     }
 
     @Override
     public User updateUser(User user) {
         userRepository.findById(user.getId()).orElseThrow(
                 () -> new NonexistingEntityException(String.format("User with ID:%d does not exist", user.getId())));
-        return userRepository.save(user);
+        User result = null;
+        try {
+            result = userRepository.save(user);
+        }catch (RuntimeException ex){
+            ExceptionHandlingUtils.handleDataIntegrityViolationException(ex);
+        }
+        return result;
     }
 
     @Override

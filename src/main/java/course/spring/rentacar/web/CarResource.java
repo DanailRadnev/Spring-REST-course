@@ -1,14 +1,17 @@
 package course.spring.rentacar.web;
 
 import course.spring.rentacar.exception.InvalidEntityDataException;
+import course.spring.rentacar.exception.ValidationException;
 import course.spring.rentacar.model.entity.Car;
 import course.spring.rentacar.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
@@ -34,18 +37,24 @@ public class CarResource {
     }
 
     @PostMapping
-    public ResponseEntity<Car> createCar(@RequestBody Car car, HttpServletRequest request) {
+    public ResponseEntity<Car> createCar(@RequestBody @Valid Car car, HttpServletRequest request, Errors errors) {
+        if(errors.hasErrors()){
+            throw new ValidationException(errors);
+        }
         //TODO check if the logged user is Admin
         Car created = carService.addCar(car);
         return ResponseEntity.created(
                 MvcUriComponentsBuilder
-                        .fromMethodCall(on(CarResource.class).createCar(car, request))
+                        .fromMethodCall(on(CarResource.class).createCar(car, request, errors))
                         .pathSegment("{id}").build(created.getId())
         ).body(created);
     }
 
     @PutMapping("{id}")
-    public Car updateCar(@PathVariable Long id, @RequestBody Car car) {
+    public Car updateCar(@PathVariable Long id, @RequestBody @Valid Car car, Errors errors) {
+        if(errors.hasErrors()){
+            throw new ValidationException(errors);
+        }
         //TODO check for validation errors
         //TODO check if the logged user is Admin
 
@@ -54,7 +63,10 @@ public class CarResource {
     }
 
     @PutMapping("dirty/{id}")
-    public Car updateCarForWash(@PathVariable Long id, @RequestBody Car car) {
+    public Car updateCarForWash(@PathVariable Long id, @RequestBody @Valid Car car, Errors errors) {
+        if(errors.hasErrors()){
+            throw new ValidationException(errors);
+        }
         //TODO check for validation errors
         //TODO check if the logged user is Admin
         checkIfCarMatchId(id, car);
@@ -62,7 +74,10 @@ public class CarResource {
     }
 
     @PutMapping("broke/{id}")
-    public Car updateCarForRepair(@PathVariable Long id, @RequestBody Car car) {
+    public Car updateCarForRepair(@PathVariable Long id, @RequestBody @Valid Car car, Errors errors) {
+        if(errors.hasErrors()){
+            throw new ValidationException(errors);
+        }
         //TODO check for validation errors
         //TODO check if the logged user is Admin
 
@@ -71,7 +86,10 @@ public class CarResource {
     }
 
     @PutMapping("wash/{id}")
-    public Car washCar(@PathVariable Long id, @RequestBody Car car) {
+    public Car washCar(@PathVariable Long id, @RequestBody @Valid Car car, Errors errors) {
+        if(errors.hasErrors()){
+            throw new ValidationException(errors);
+        }
         //TODO check for validation errors
         //TODO check if the logged user is Employee
         checkIfCarMatchId(id, car);
@@ -79,7 +97,10 @@ public class CarResource {
     }
 
     @PutMapping("repair/{id}")
-    public Car repairCar(@PathVariable Long id, @RequestBody Car car) {
+    public Car repairCar(@PathVariable Long id, @RequestBody @Valid Car car, Errors errors) {
+        if(errors.hasErrors()){
+            throw new ValidationException(errors);
+        }
         //TODO check for validation errors
         //TODO check if the logged user is Employee
 
@@ -87,16 +108,24 @@ public class CarResource {
         return carService.repairCar(car);
     }
 
-    @PutMapping("rent/user/{userId}/car/{carId}")
-    public Car rentACar(@PathVariable Long userId, @PathVariable Long carId, @RequestBody Car car) {
-        //TODO check for validation errors
+    @PutMapping("rent/{carId}/user/{userId}")
+    public Car rentACar(@PathVariable Long carId, @PathVariable Long userId, @RequestBody @Valid Car car, Errors errors) {
+        if(errors.hasErrors()){
+            throw new ValidationException(errors);
+        }
 
         checkIfCarMatchId(carId, car);
         return carService.rentACar(car, userId);
     }
 
     @PutMapping("return/{id}/user/{userId}/rate/{rate}")
-    public Car returnAndRateCar(@PathVariable Long id, @PositiveOrZero @PathVariable Long rate, @PathVariable Long userId, @RequestBody Car car) {
+    public Car returnAndRateCar(@PathVariable Long id,
+                                @PositiveOrZero @PathVariable Long rate,
+                                @PathVariable Long userId,
+                                @RequestBody @Valid Car car, Errors errors) {
+        if(errors.hasErrors()){
+            throw new ValidationException(errors);
+        }
         //TODO check for validation errors
 
         checkIfCarMatchId(id, car);
@@ -104,7 +133,10 @@ public class CarResource {
     }
 
     @PutMapping("return/{id}/user/{userId}")
-    public Car returnCar(@PathVariable Long id, @PathVariable Long userId, @RequestBody Car car) {
+    public Car returnCar(@PathVariable Long id, @PathVariable Long userId, @RequestBody @Valid  Car car, Errors errors) {
+        if(errors.hasErrors()){
+            throw new ValidationException(errors);
+        }
         //TODO check for validation errors
 
         checkIfCarMatchId(id, car);

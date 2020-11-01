@@ -4,6 +4,7 @@ import course.spring.rentacar.dao.CarRepository;
 import course.spring.rentacar.dao.RatingRepository;
 import course.spring.rentacar.dao.UserRepository;
 import course.spring.rentacar.exception.NonexistingEntityException;
+import course.spring.rentacar.exception.UnauthorizedException;
 import course.spring.rentacar.model.entity.Car;
 import course.spring.rentacar.model.entity.Rating;
 import course.spring.rentacar.model.entity.User;
@@ -108,6 +109,10 @@ public class CarServiceImpl implements CarService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new NonexistingEntityException(String.format("User with ID:%d does not exist", userId)));
 
+
+        if(!user.isActive()){
+            throw new UnauthorizedException("Your account is deactivated!");
+        }
         //TODO Use logged user !!!
 
         result.setUser(user);
@@ -120,7 +125,7 @@ public class CarServiceImpl implements CarService {
         Car result = this.getCarById(car.getId());
 
         if(result.getUser() != null && !result.getUser().getId().equals(userId)){
-            throw new NonexistingEntityException("The cat is not rented by this user");
+            throw new NonexistingEntityException("The car is not rented by this user");
         }else if(result.isAvailable()){
             throw new NonexistingEntityException("The car is not rented");
         }
