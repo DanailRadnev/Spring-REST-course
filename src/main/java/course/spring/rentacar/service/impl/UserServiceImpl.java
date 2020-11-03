@@ -1,7 +1,9 @@
 package course.spring.rentacar.service.impl;
 
 import course.spring.rentacar.dao.UserRepository;
+import course.spring.rentacar.exception.InvalidEntityDataException;
 import course.spring.rentacar.exception.NonexistingEntityException;
+import course.spring.rentacar.exception.ValidationException;
 import course.spring.rentacar.exception.util.ExceptionHandlingUtils;
 import course.spring.rentacar.model.Role;
 import course.spring.rentacar.model.entity.User;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static course.spring.rentacar.model.Role.EMPLOYEE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
 @Service
@@ -78,14 +81,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addEmployee(User emp) {
-        //TODO assign EMPLOYEE Role to the given User.
-        return null;
+        User result = userRepository.findById(emp.getId()).orElseThrow();
+        result.getRoles().add(EMPLOYEE);
+        return userRepository.save(result);
     }
 
     @Override
     public User removeEmployee(User emp) {
-        //TODO remove EMPLOYEE Role to the given User.
-        return null;
+        User result = userRepository.findById(emp.getId()).orElseThrow(() -> new NonexistingEntityException("asdasd"));
+        result.getRoles().remove(EMPLOYEE);
+        return userRepository.save(result);
     }
 
     @Override
