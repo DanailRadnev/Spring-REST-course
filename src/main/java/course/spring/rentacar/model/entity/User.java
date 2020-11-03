@@ -1,5 +1,6 @@
 package course.spring.rentacar.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 import course.spring.rentacar.model.Role;
@@ -25,6 +26,7 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"authorities", "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"})
 public class User implements UserDetails{
     @Id
     @GeneratedValue(generator = "user_sequence", strategy = GenerationType.SEQUENCE)

@@ -53,8 +53,6 @@ public class UserResource {
         if(errors.hasErrors()){
             throw new ValidationException(errors);
         }
-        //TODO check for validation errors
-
         checkIfUserMatchId(id, user);
         return userService.updateUser(user);
     }

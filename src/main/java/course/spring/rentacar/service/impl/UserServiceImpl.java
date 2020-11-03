@@ -65,6 +65,14 @@ public class UserServiceImpl implements UserService {
         User result = userRepository.findById(user.getId()).orElseThrow(
                 () -> new NonexistingEntityException(String.format("User with ID:%d does not exist", user.getId())));
         try {
+
+            if(user.getPassword() != null && !user.getPassword().isEmpty() && !user.getPassword().isBlank()){
+                PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            }else {
+                user.setPassword(result.getPassword());
+            }
+
             result = userRepository.save(user);
         }catch (RuntimeException ex){
             ExceptionHandlingUtils.handleDataIntegrityViolationException(ex);

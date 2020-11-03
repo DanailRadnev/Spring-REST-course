@@ -74,28 +74,30 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car setCarForWash(Car car) {
-        car.setDirty(true);
-        return carRepository.save(car);
+        Car result = this.getCarById(car.getId());
+        result.setDirty(true);
+        return carRepository.save(result);
     }
 
     @Override
     public Car setCarForRepair(Car car) {
-        car.setBroke(true);
-        return carRepository.save(car);
+        Car result = this.getCarById(car.getId());
+        result.setBroke(true);
+        return carRepository.save(result);
     }
 
     @Override
     public Car washCar(Car car) {
         Car result = this.getCarById(car.getId());
         result.setDirty(false);
-        return carRepository.save(car);
+        return carRepository.save(result);
     }
 
     @Override
     public Car repairCar(Car car) {
         Car result = this.getCarById(car.getId());
         result.setBroke(false);
-        return carRepository.save(car);
+        return carRepository.save(result);
     }
 
     @Override

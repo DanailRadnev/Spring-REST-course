@@ -22,6 +22,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .httpBasic(withDefaults())
                 .authorizeRequests()
+
+                .antMatchers(HttpMethod.GET,"/rentacar/user/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.POST,"/rentacar/user/**").permitAll()
+                .antMatchers(HttpMethod.PUT,"/rentacar/user/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.DELETE,"/rentacar/user/**").hasAnyRole("ADMIN", "USER")
+
+
+                .antMatchers(HttpMethod.GET,"/rentacar/car/**").permitAll()
+                .antMatchers(HttpMethod.PUT,"/rentacar/car/dirty/**").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.PUT,"/rentacar/car/wash/**").hasAnyRole("EMPLOYEE")
+                .antMatchers(HttpMethod.PUT,"/rentacar/car/broke/**").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.PUT,"/rentacar/car/repair/**").hasAnyRole("EMPLOYEE")
+                .antMatchers(HttpMethod.PUT,"/rentacar/car/rent/**").hasAnyRole("USER")
+                .antMatchers(HttpMethod.PUT,"/rentacar/car/return/**").hasAnyRole("USER")
+                .antMatchers(HttpMethod.DELETE,"/rentacar/car/**").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.POST,"/rentacar/car/**").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.PUT,"/rentacar/car/**").hasAnyRole("ADMIN")
+
+
                 .antMatchers("/rentacar/admin/**").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.GET,"/rentacar/user/**").hasAnyRole("ADMIN");
     }
@@ -29,10 +48,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     UserDetailsService userDetailsService(UserService userService) {
         return username -> userService.getUserByUsername(username);
-
-//        User.UserBuilder users = User.withDefaultPasswordEncoder();
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//        manager.createUser(users.username("user").password("password").roles("USER").build());
-//        return manager;
     }
 }

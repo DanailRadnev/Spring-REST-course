@@ -10,8 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.ConstraintViolation;
+
+import java.util.ArrayList;
+
+import static org.springframework.http.HttpStatus.*;
 
 
 @ControllerAdvice
@@ -49,15 +54,11 @@ public class ExceptionHandlerAdvice {
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
-    //TODO implement integrity handling
-//    @ExceptionHandler({DataIntegrityViolationException.class})
-//    public ResponseEntity<ExceptionResponse> handleDataIntegrityViolationException(RuntimeException ex){
-//
-//        ValidationException exception = ExceptionHandlingUtils.extractConstraintViolationException(ex);
-//
-//        ExceptionResponse exceptionResponse = new ExceptionResponse(400,"Constraint violation error");
-//        exceptionResponse.getExceptionMessages().add(ex.getMessage());
-//
-//        return ResponseEntity.badRequest().body(exceptionResponse);
-//    }
+    @ResponseStatus(value = CONFLICT)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ExceptionResponse> handleDataIntegrityViolationException(DataIntegrityViolationException exception){
+        ExceptionResponse errorMessage = new ExceptionResponse(409,"Data integrity violation.", new ArrayList<>(), null);
+        errorMessage.getConstraintViolations().add(exception.getRootCause().getMessage());
+        return ResponseEntity.badRequest().body(errorMessage);
+    }
 }
