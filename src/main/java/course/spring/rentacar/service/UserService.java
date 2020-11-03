@@ -14,6 +14,7 @@ public interface UserService {
     User deleteUser(Long id);
     User addEmployee(User emp);
     User removeEmployee(User emp);
+    public long count();
 
 
 //    Car updateCar(Car car);

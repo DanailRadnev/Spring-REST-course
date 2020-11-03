@@ -2,6 +2,7 @@ package course.spring.rentacar.web;
 
 import course.spring.rentacar.exception.InvalidEntityDataException;
 import course.spring.rentacar.exception.ValidationException;
+import course.spring.rentacar.model.Role;
 import course.spring.rentacar.model.entity.User;
 import course.spring.rentacar.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,9 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashSet;
+
+import static course.spring.rentacar.model.Role.USER;
 
 @RestController
 @RequestMapping("/rentacar/admin/")
@@ -41,6 +45,7 @@ public class AdminResource {
 
         //TODO check if the logged user is Admin
         user.setActive(true);
+        user.getRoles().add(USER);
         return userService.updateUser(user);
     }
 
